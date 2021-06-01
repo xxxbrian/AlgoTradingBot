@@ -38,7 +38,7 @@ class ccxt_bot():
                 }
             )
         else:
-            print('ERROR: exchange id \"%d\" is not supported.',exchange_id)
+            print('ERROR: exchange id \"%s\" is not supported.' % exchange_id)
 
     def tr(self, data):
         data['previous_close'] = data['close'].shift(1)
