@@ -4,3 +4,8 @@ sample.py
 __pycache__/
 .idea/
 venv_windows/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
