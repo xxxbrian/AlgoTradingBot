@@ -1,0 +1,5 @@
+
+ccxt_project/
+sample.py
+__pycache__/
+.idea/
