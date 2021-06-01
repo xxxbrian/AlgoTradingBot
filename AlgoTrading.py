@@ -21,12 +21,12 @@ class ccxt_bot():
                     'secrert': config.BINANCE_SECRET_KEY,
                 }
             )
-        elif exchange_id == 'okexmimic':
-            self.exchange = ccxt.okexmimic(
+        elif exchange_id == 'okexpaper':
+            self.exchange = ccxt.okexpaper(
                 {
-                    'apikey': config.OKEXMIMIC_API_KEY,
-                    'secrert': config.OKEXMIMIC_SECRET_KEY,
-                    'password': config.OKEXMIMIC_PASSWORD,
+                    'apikey': config.OKEXPAPER_API_KEY,
+                    'secrert': config.OKEXPAPER_SECRET_KEY,
+                    'password': config.OKEXPAPER_PASSWORD,
                 }
             )
         elif exchange_id == 'okex5':
@@ -126,7 +126,7 @@ class ccxt_bot():
         self.check_buy_sell_signals(supertrend_data)
 
 
-exchange_id='okexmimic'
+exchange_id='yourexchangid'
 schedule.every(10).seconds.do(ccxt_bot(exchange_id).run)
 
 while True:

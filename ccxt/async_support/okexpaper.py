@@ -27,11 +27,11 @@ from ccxt.base.decimal_to_precision import TICK_SIZE
 from ccxt.base.precise import Precise
 
 
-class okexmimic(Exchange):
+class okexpaper(Exchange):
 
     def describe(self):
-        return self.deep_extend(super(okexmimic, self).describe(), {
-            'id': 'okexmimic',
+        return self.deep_extend(super(okexpaper, self).describe(), {
+            'id': 'okexpaper',
             'name': 'OKEX',
             'countries': ['CN', 'US'],
             'version': 'v5',

@@ -2,10 +2,10 @@
 BINANCE_API_KEY = 'yourbinanceapikey'
 BINANCE_SECRET_KEY = 'yourbinancesecretkey'
 
-# okexmimic
-OKEXMIMIC_API_KEY = 'yourokexmimicapikey'
-OKEXMIMIC_SECRET_KEY = 'yourokexmimicsecretkey'
-OKEXMIMIC_PASSWORD = 'yourokexmimicpassword'
+# okexpaper
+OKEXPAPER_API_KEY = 'yourokexpaperapikey'
+OKEXPAPER_SECRET_KEY = 'yourokexpapersecretkey'
+OKEXPAPER_PASSWORD = 'yourokexpaperpassword'
 
 # okex5
 OKEX5_API_KEY = 'yourokex5apikey'

@@ -146,7 +146,7 @@ from ccxt.async_support.oceanex import oceanex                            # noqa
 from ccxt.async_support.okcoin import okcoin                              # noqa: F401
 from ccxt.async_support.okex import okex                                  # noqa: F401
 from ccxt.async_support.okex5 import okex5                                # noqa: F401
-from ccxt.async_support.okexmimic import okexmimic                                # noqa: F401
+from ccxt.async_support.okexpaper import okexpaper                         # noqa: F401
 from ccxt.async_support.paymium import paymium                            # noqa: F401
 from ccxt.async_support.phemex import phemex                              # noqa: F401
 from ccxt.async_support.poloniex import poloniex                          # noqa: F401
@@ -265,7 +265,7 @@ exchanges = [
     'okcoin',
     'okex',
     'okex5',
-    'okexmimic'
+    'okexpaper'
     'paymium',
     'phemex',
     'poloniex',
