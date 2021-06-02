@@ -2,23 +2,32 @@ import ccxt
 import config
 import schedule
 import pandas as pd
+
 pd.set_option('display.max_rows', None)
 
 import warnings
+
 warnings.filterwarnings('ignore')
 
 import numpy as np
 from datetime import datetime
 import time
 
+
 class ccxt_bot():
-    def __init__(self,exchange_id,timeout=3000):
+    def __init__(self, exchange_id, enable_KWARGS=False):
+        self.in_position = False
+        if enable_KWARGS:
+            kwargs = config.KWARGS
+        else:
+            kwargs = {}
         # 交易所
-        if exchange_id == 'binaance':
+        if exchange_id == 'binance':
             self.exchange = ccxt.binance(
                 {
                     'apikey': config.BINANCE_API_KEY,
                     'secrert': config.BINANCE_SECRET_KEY,
+                    **kwargs
                 }
             )
         elif exchange_id == 'okexpaper':
@@ -27,6 +36,7 @@ class ccxt_bot():
                     'apikey': config.OKEXPAPER_API_KEY,
                     'secrert': config.OKEXPAPER_SECRET_KEY,
                     'password': config.OKEXPAPER_PASSWORD,
+                    **kwargs
                 }
             )
         elif exchange_id == 'okex5':
@@ -35,10 +45,20 @@ class ccxt_bot():
                     'apikey': config.OKEX5_API_KEY,
                     'secrert': config.OKEX5_SECRET_KEY,
                     'password': config.OKEX5_PASSWORD,
+                    **kwargs
+                }
+            )
+        elif exchange_id == 'huobipro':
+            self.exchange = ccxt.huobipro(
+                {
+                    'apikey': config.HUOBIPRO_API_KEY,
+                    'secrert': config.HUOBIPRO_SECRET_KEY,
+                    **kwargs
                 }
             )
         else:
             print('ERROR: exchange id \"%s\" is not supported.' % exchange_id)
+            exit()
 
     def tr(self, data):
         data['previous_close'] = data['close'].shift(1)
@@ -50,13 +70,11 @@ class ccxt_bot():
 
         return tr
 
-
     def atr(self, data, period):
         data['tr'] = self.tr(data)
         atr = data['tr'].rolling(period).mean()
 
         return atr
-
 
     def supertrend(self, df, period=7, atr_multiplier=3):
         hl2 = (df['high'] + df['low']) / 2
@@ -83,13 +101,7 @@ class ccxt_bot():
 
         return df
 
-
-    in_position = False
-
-
     def check_buy_sell_signals(self, df):
-        global in_position
-
         print("checking for buy and sell signals")
         print(df.tail(5))
         last_row_index = len(df.index) - 1
@@ -97,42 +109,40 @@ class ccxt_bot():
 
         if not df['in_uptrend'][previous_row_index] and df['in_uptrend'][last_row_index]:
             print("changed to uptrend, buy")
-            if not in_position:
-                order =self.exchange.create_market_buy_order('ETH/USD', 0.05)
+            if not self.in_position:
+                order = self.exchange.create_market_buy_order('ETH/USD', 0.05)
                 print(order)
-                in_position = True
+                self.in_position = True
             else:
                 print("already in position, nothing to do")
 
         if df['in_uptrend'][previous_row_index] and not df['in_uptrend'][last_row_index]:
-            if in_position:
+            if self.in_position:
                 print("changed to downtrend, sell")
-                order =self.exchange.create_market_sell_order('ETH/USD', 0.05)
+                order = self.exchange.create_market_sell_order('ETH/USD', 0.05)
                 print(order)
-                in_position = False
+                self.in_position = False
             else:
                 print("You aren't in position, nothing to sell")
 
-    def RDO(self): # Return data only
+    def rdo(self):  # Return data only
         print(f"Fetching new bars for {datetime.now().isoformat()}")
-        bars =self.exchange.fetch_ohlcv('ETH/USDT', timeframe='1m', limit=100)
+        bars = self.exchange.fetch_ohlcv('ETH/USDT', timeframe='1m', limit=100)
         df = pd.DataFrame(bars[:-1], columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
 
         return df
 
     def run(self):
-        supertrend_data = self.supertrend(self.RDO())
+        supertrend_data = self.supertrend(self.rdo())
         self.check_buy_sell_signals(supertrend_data)
 
 
-exchange_id='yourexchangid'
-schedule.every(10).seconds.do(ccxt_bot(exchange_id).run)
+exchange_id = 'yourexchangeid'
+# timeout=15000
+
+schedule.every(10).seconds.do(ccxt_bot(exchange_id, True).run)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
-
-
-
-

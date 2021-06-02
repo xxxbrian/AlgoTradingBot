@@ -1,11 +1,43 @@
-
+# Python
 ccxt_project/
 sample.py
+sample_config.py
 __pycache__/
 .idea/
 venv_windows/
+venv_mac/
 
-# Windows
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
 Thumbs.db
 ehthumbs.db
-Desktop.ini
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
+
+# Compiled Python files
+*.pyc
+
+# Compiled C++ files
+*.out
+
+# Application specific files
+venv
+node_modules
+.sass-cache
+
+# Temp File
+*.swp
+*.swa
+*.swo
+
+# github merge file
+*.orig
+
+#vscode
+.vscode
