@@ -42,7 +42,7 @@ class interest():
         bars = self.ticks
         qv = {}
         for symbol in bars.keys():
-            if symbol[-5:] == "/USDT" and bars[symbol]['bid'] > 0 and symbol not in black_list:
+            if symbol[-5:] == "/USDT" and bars[symbol]['bid'] > 0 and symbol[:-5] not in black_list:
                 # print(symbol + ': %f' % bars[symbol]['bid'])
                 qv[symbol] = bars[symbol]['quoteVolume']
         qv = sorted(qv.items(), key=lambda item: item[1])[:self.sums]
@@ -90,5 +90,5 @@ exchange = ccxt.binance(
 )
 
 # print(interest(exchange).margin('ETH', 'BNB', 'WAN'))
-# print(interest(exchange).get_target())
-interest(exchange).auto_info()
+print(interest(exchange).get_target())
+# interest(exchange).auto_info()
