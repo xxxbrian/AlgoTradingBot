@@ -25,16 +25,16 @@ class ccxt_bot():
         if exchange_id == 'binance':
             self.exchange = ccxt.binance(
                 {
-                    'apikey': config.BINANCE_API_KEY,
-                    'secrert': config.BINANCE_SECRET_KEY,
+                    'apiKey': config.BINANCE_API_KEY,
+                    'secret': config.BINANCE_SECRET_KEY,
                     **kwargs
                 }
             )
         elif exchange_id == 'okexpaper':
             self.exchange = ccxt.okexpaper(
                 {
-                    'apikey': config.OKEXPAPER_API_KEY,
-                    'secrert': config.OKEXPAPER_SECRET_KEY,
+                    'apiKey': config.OKEXPAPER_API_KEY,
+                    'secret': config.OKEXPAPER_SECRET_KEY,
                     'password': config.OKEXPAPER_PASSWORD,
                     **kwargs
                 }
@@ -42,8 +42,8 @@ class ccxt_bot():
         elif exchange_id == 'okex5':
             self.exchange = ccxt.okex5(
                 {
-                    'apikey': config.OKEX5_API_KEY,
-                    'secrert': config.OKEX5_SECRET_KEY,
+                    'apiKey': config.OKEX5_API_KEY,
+                    'secret': config.OKEX5_SECRET_KEY,
                     'password': config.OKEX5_PASSWORD,
                     **kwargs
                 }
@@ -51,8 +51,8 @@ class ccxt_bot():
         elif exchange_id == 'huobipro':
             self.exchange = ccxt.huobipro(
                 {
-                    'apikey': config.HUOBIPRO_API_KEY,
-                    'secrert': config.HUOBIPRO_SECRET_KEY,
+                    'apiKey': config.HUOBIPRO_API_KEY,
+                    'secret': config.HUOBIPRO_SECRET_KEY,
                     **kwargs
                 }
             )

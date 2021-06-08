@@ -21,7 +21,7 @@ OKEX5_API_KEY = 'yourokex5apikey'
 OKEX5_SECRET_KEY = 'yourokex5secretkey'
 OKEX5_PASSWORD = 'yourokex5password'
 
-# huobipro
+# huobipro / huobiio
 HUOBIPRO_API_KEY = 'yourhuobiproapikey'
 HUOBIPRO_SECRET_KEY = 'yourhuobiprosecretkey'
 HUOBIPRO_PASSWORD = 'yourhuobipropassword'
