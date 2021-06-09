@@ -23,6 +23,9 @@ class interest():
         self.sums = 50
         self.all_sums = len(self.ticks)
         self.poundage = 0.075
+        self.updata_EBB()
+
+    def updata_EBB(self):
         self.dict = {}
 
         # ETH & BTC
@@ -41,6 +44,7 @@ class interest():
         for updata in self.ent_mid_list:
             self.updata_list.append(updata)
         self.ticks = exchange.fetch_tickers(self.updata_list)
+        self.updata_EBB()
 
     def margin(self, ent, mid, tar):
         tar_price = self.ticks['%s/%s' % (tar, ent)]['bid']
