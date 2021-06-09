@@ -2,10 +2,13 @@
 # TODO 加入挂单查询，对可盈利交易对进行分析
 # TODO 短时间内多次查询，降低错误率
 # TODO 根据利率和余额自动下单
+import time
 import warnings
 
+import schedule
+
 import ccxt
-import sample_config as config
+import config as config
 
 warnings.filterwarnings('ignore')
 
@@ -14,7 +17,11 @@ class interest():
     def __init__(self, exchange):
         self.ticks = exchange.fetch_tickers()
         self.ent_list = ['ETH', 'BTC', 'BNB']
+        self.ent_mid_list = ['ETH/BTC', 'BNB/ETH', 'BNB/BTC']
+        self.memdict = {}
+        self.updata_list = []
         self.sums = 50
+        self.all_sums = len(self.ticks)
         self.poundage = 0.075
         self.dict = {}
 
@@ -30,6 +37,11 @@ class interest():
         self.dict['BNB/BTC'] = self.ticks['BNB/BTC']['bid']
         self.dict['BTC/BNB'] = 1 / self.dict['BNB/BTC']
 
+    def updata_tickers(self):
+        for updata in self.ent_mid_list:
+            self.updata_list.append(updata)
+        self.ticks = exchange.fetch_tickers(self.updata_list)
+
     def margin(self, ent, mid, tar):
         tar_price = self.ticks['%s/%s' % (tar, ent)]['bid']
         # tar_amount = (1 / tar_price)
@@ -39,6 +51,8 @@ class interest():
 
     def get_leastquoteVolume_dict(self):
         black_list = ['SUSD', 'DAI', 'USDC', 'BUSD', 'PAX']
+        if len(self.ticks) <= self.all_sums * 0.9:
+            self.ticks = exchange.fetch_tickers()
         bars = self.ticks
         qv = {}
         for symbol in bars.keys():
@@ -48,7 +62,7 @@ class interest():
         qv = sorted(qv.items(), key=lambda item: item[1])[:self.sums]
         return qv
 
-    def get_target(self):
+    def get_target(self, useselfdict=False):
         qv = self.get_leastquoteVolume_dict()
         dict = {}
         for i in range(self.sums):
@@ -60,6 +74,8 @@ class interest():
                             dict[tar].append(ent)
                         else:
                             dict[tar] = [ent]
+        if useselfdict == True:
+            self.memdict = dict
         return dict
 
     def trading_info(self, ent, mid, tar):
@@ -71,15 +87,37 @@ class interest():
         else:
             return '%s: %s/%s 亏损' % (tar, ent, mid)
 
+    def compute_all_info(self, dict):
+        print(time.asctime(time.localtime(time.time())))
+        try:
+            self.updata_list = []
+            for tar in dict.keys():
+                ent_list = dict[tar]
+                for ent in ent_list:
+                    self.updata_list.append('%s/%s' % (tar, ent))
+            self.updata_tickers()
+            for tar in dict.keys():
+                ent_list = dict[tar]
+                if len(ent_list) > 1:
+                    for i in range(len(ent_list)):
+                        for j in range(len(ent_list)):
+                            if i != j:
+                                print(self.trading_info(ent_list[i], ent_list[j], tar))
+        except Exception as e:
+            print(e)
+        else:
+            print('')
+
     def auto_info(self):
         dict = self.get_target()
-        for tar in dict.keys():
-            ent_list = dict[tar]
-            if len(ent_list) > 1:
-                for i in range(len(ent_list)):
-                    for j in range(len(ent_list)):
-                        if i != j:
-                            print(self.trading_info(ent_list[i], ent_list[j], tar))
+        self.compute_all_info(dict)
+
+    def auto_info_schedule(self, sleep=2):
+        self.get_target(True)
+        schedule.every(1).hour.do(self.get_target, True)
+        schedule.every(sleep).seconds.do(self.compute_all_info, self.memdict)
+        while True:
+            schedule.run_pending()
 
 
 exchange = ccxt.binance(
@@ -90,5 +128,7 @@ exchange = ccxt.binance(
 )
 
 # print(interest(exchange).margin('ETH', 'BNB', 'WAN'))
-print(interest(exchange).get_target())
+# print(interest(exchange).get_target())
 # interest(exchange).auto_info()
+
+interest(exchange).auto_info_schedule()
