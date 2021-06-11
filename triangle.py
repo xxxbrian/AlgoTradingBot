@@ -159,33 +159,31 @@ class interest():
 
     def compute_all(self, dict):
         transaction_list = []
-        # try:
-        self.updata_list = []
-        for tar in dict.keys():
-            ent_list = dict[tar]
-            for ent in ent_list:
-                self.updata_list.append('%s/%s' % (tar, ent))
-        self.updata_tickers()
-        for tar in dict.keys():
-            ent_list = dict[tar]
-            if len(ent_list) > 1:
-                for i in range(len(ent_list)):
-                    for j in range(len(ent_list)):
-                        if i != j:
-                            standard, margin0, margin3, margin5 = self.trading_dict(ent_list[i], ent_list[j], tar)
-                            transaction_list.append(
-                                {'standard': standard, 'tar': tar, 'ent': ent_list[i], 'mid': ent_list[j],
-                                 'margin*0': margin0, 'margin*3': margin3, 'margin*5': margin5})
-        transaction_list = sorted(transaction_list, key=lambda item: item['margin*0'], reverse=True)
-        best = transaction_list[0]
-        print(best)
-        # 目前只做比本位交易
-        if best['standard'] == 'u' or best['standard'] == 'b':
-            self.order(best['ent'], best['mid'], best['tar'])
-        # except Exception as e:
-        #     print(e)
-        # else:
-        #     print('')
+        try:
+            self.updata_list = []
+            for tar in dict.keys():
+                ent_list = dict[tar]
+                for ent in ent_list:
+                    self.updata_list.append('%s/%s' % (tar, ent))
+            self.updata_tickers()
+            for tar in dict.keys():
+                ent_list = dict[tar]
+                if len(ent_list) > 1:
+                    for i in range(len(ent_list)):
+                        for j in range(len(ent_list)):
+                            if i != j:
+                                standard, margin0, margin3, margin5 = self.trading_dict(ent_list[i], ent_list[j], tar)
+                                transaction_list.append(
+                                    {'standard': standard, 'tar': tar, 'ent': ent_list[i], 'mid': ent_list[j],
+                                     'margin*0': margin0, 'margin*3': margin3, 'margin*5': margin5})
+            transaction_list = sorted(transaction_list, key=lambda item: item['margin*0'], reverse=True)
+            best = transaction_list[0]
+            print(best)
+            # 目前只做比本位交易
+            if best['standard'] == 'u' or best['standard'] == 'b':
+                self.order(best['ent'], best['mid'], best['tar'])
+        except Exception as e:
+            print(e)
 
     def order(self, ent, mid, tar, u_b='b'):
         # ent 2 tar
