@@ -187,7 +187,7 @@ class interest():
 
     def order(self, ent, mid, tar, u_b='b'):
         # ent 2 tar
-        ent2tar_orderbook = exchange.fetch_order_book('%s/%s' % (ent, tar))
+        ent2tar_orderbook = exchange.fetch_order_book('%s/%s' % (tar, ent))
         ent_amount = ent2tar_orderbook['bid'][0][0] * ent2tar_orderbook['bid'][0][1]
         myorder_ent2tar = self.b2b(ent, tar, min(ent_amount, exchange.fetch_balance()[ent]['free']))
 
