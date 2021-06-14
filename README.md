@@ -76,6 +76,15 @@ sleep = 5 # 每5秒重新查询计算一次
 interest(exchange).auto_info_schedule(sleep) # sleep默认为2s
 ```
 
+### interest().auto_run() 自动交易
+通过`exchange.fetch_order`和`exchange.fetch_order_book`方法对交易对挂单进行查询，完成吃单。
+```python
+sleep = 5 # 每5秒重新查询计算一次
+
+# auto_info_schedule -> None
+interest(exchange).auto_run(sleep) # sleep默认为2s
+```
+
 ### TODO
 + 加入挂单查询，对可盈利交易对进行分析
 + 短时间内多次查询，降低错误率
